@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
@@ -66,3 +67,23 @@ Route::middleware('auth')->group(function () {
 
 // Route untuk Payment Webhook (contoh jika menggunakan Stripe webhook)
 //Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('payment.webhook');
+
+Route::get('/test-cloudinary', function () {
+    $path = public_path('test.jpg'); // pastikan file ini ada dulu
+
+    try {
+        $result = Cloudinary::upload($path)->getSecurePath();
+        return response()->json(['success' => true, 'url' => $result]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+        ]);
+    }
+});
+
+
+Route::get('/test-env', function () {
+    return env('CLOUDINARY_URL');
+});
+

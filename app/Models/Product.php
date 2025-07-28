@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'price', 'inventory','image','categories_id','is_visible'];
+    protected $fillable = ['name', 'description', 'price', 'inventory','image','categories_id','is_visible','slug'];
 
     // Satu produk dapat muncul di banyak cart item dan order item
     public function cartItems()
@@ -28,4 +30,6 @@ class Product extends Model
         // Argumen kedua pada belongsTo adalah nama foreign key
         return $this->belongsTo(Category::class, 'categories_id');
     }
+
+     
 }

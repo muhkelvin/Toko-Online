@@ -20,8 +20,13 @@
         <div class="card lg:card-side bg-base-100 shadow-xl">
             {{-- Kolom Gambar Produk --}}
             <figure class="px-10 pt-10 lg:p-0 lg:w-1/2">
-                <img src="{{ $product->image ? asset('storage/'.$product->image) : 'https://placehold.co/800x800/EAF0F6/7F8C8D?text=Produk' }}" alt="{{ $product->name }}" class="w-full h-auto max-h-[500px] object-contain rounded-xl" />
+                <img
+                    src="{{ $product->image ? Storage::disk('s3')->url($product->image) : 'https://placehold.co/800x800/EAF0F6/7F8C8D?text=Produk' }}"
+                    alt="{{ $product->name }}"
+                    class="w-full h-auto max-h-[500px] object-contain rounded-xl"
+                />
             </figure>
+
 
             {{-- Kolom Detail Produk --}}
             <div class="card-body lg:w-1/2">
@@ -48,7 +53,7 @@
 
                 {{-- Deskripsi Produk --}}
                 <div class="prose max-w-none text-base-content/80 my-4">
-                    <p>{{ $product->description }}</p>
+                    <p>{!! $product->description !!}</p>
                 </div>
 
                 {{-- Form Tambah ke Keranjang --}}

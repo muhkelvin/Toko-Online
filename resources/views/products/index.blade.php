@@ -60,12 +60,18 @@
                         <div class="card card-compact bg-base-100 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
                             <a href="{{ route('products.show', $product) }}">
                                 <figure class="h-64 overflow-hidden">
-                                    <img src="{{ $product->image ? asset('storage/'.$product->image) : 'https://placehold.co/800x800/EAF0F6/7F8C8D?text=Produk' }}" alt="{{ $product->name }}" class="w-full h-full object-cover" />
+                                    <img
+                                        src="{{ Storage::disk('s3')->url($product->image) }}"
+                                        alt="{{ $product->name }}"
+                                        class="object-cover w-full h-full"
+                                        referrerpolicy="origin"
+                                    />
                                 </figure>
+
                             </a>
                             <div class="card-body">
                                 <h2 class="card-title text-lg">{{ $product->name }}</h2>
-                                <p class="text-base-content/70">{{ Str::limit($product->description, 50) }}</p>
+                                <p class="text-base-content/70">{!! Str::limit($product->description, 50) !!}</p>
                                 <div class="mt-2">
                                     <span class="text-xl font-semibold text-primary">Rp{{ number_format($product->price, 0, ',', '.') }}</span>
                                 </div>

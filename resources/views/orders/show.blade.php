@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                {{-- Detail Pembayaran --}}
+                {{-- Detail Status Pembayaran --}}
                 <div class="card bg-base-100 shadow-xl">
                     <div class="card-body">
                         <h2 class="card-title">Status Pembayaran</h2>
@@ -52,7 +52,7 @@
                             @if($order->payment->payment_method === 'manual_transfer' && $order->payment->payment_status === 'pending')
                                 <div class="alert alert-info text-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <span>Segera upload bukti pembayaran Anda.</span>
+                                    <span>Segera selesaikan pembayaran dan upload bukti transfer Anda.</span>
                                 </div>
                                 <a href="{{ route('payment.upload.form', $order) }}" class="btn btn-primary w-full mt-4">Upload Bukti</a>
                             @elseif($order->payment->payment_proof)
@@ -64,8 +64,9 @@
                 </div>
             </div>
 
-            {{-- Kolom Kanan: Daftar Item --}}
-            <div class="lg:col-span-2">
+            {{-- Kolom Kanan: Daftar Item & Opsi Pembayaran --}}
+            <div class="lg:col-span-2 flex flex-col gap-8">
+                {{-- Daftar Item --}}
                 <div class="card bg-base-100 shadow-xl">
                     <div class="card-body">
                         <h2 class="card-title mb-4">Item Pesanan</h2>
@@ -104,6 +105,39 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- OPSI PEMBAYARAN - Ditambahkan di sini --}}
+                @if($order->payment && $order->payment->payment_method === 'manual_transfer' && $order->payment->payment_status === 'pending')
+                    <div class="card bg-base-100 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title mb-4">Opsi Pembayaran</h2>
+                            <p class="text-base-content/80 mb-4">Silakan transfer sejumlah total pesanan ke salah satu rekening di bawah ini:</p>
+
+                            <div class="space-y-4">
+                                {{-- Opsi BCA --}}
+                                <div class="p-4 border border-base-300 rounded-lg">
+                                    <h3 class="font-bold text-lg">BCA (Bank Central Asia)</h3>
+                                    <div class="divider my-2"></div>
+                                    <p>Nomor Rekening: <span class="font-mono font-semibold">123-456-7890</span></p>
+                                    <p>Atas Nama: <span class="font-semibold">PT. Ecommerce Jaya</span></p>
+                                </div>
+
+                                {{-- Opsi DANA --}}
+                                <div class="p-4 border border-base-300 rounded-lg">
+                                    <h3 class="font-bold text-lg">DANA</h3>
+                                    <div class="divider my-2"></div>
+                                    <p>Nomor Telepon: <span class="font-mono font-semibold">0812-3456-7890</span></p>
+                                    <p>Atas Nama: <span class="font-semibold">PT. Ecommerce Jaya</span></p>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-warning mt-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                <span>PENTING: Pastikan untuk mengupload bukti transfer setelah melakukan pembayaran untuk mempercepat proses verifikasi.</span>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

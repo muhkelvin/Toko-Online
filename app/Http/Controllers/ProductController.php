@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category; // Pastikan Anda meng-import model Category
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -49,15 +50,23 @@ class ProductController extends Controller
         // Mengurutkan dari yang terbaru sebagai default
         $products = $productsQuery->latest()->paginate(12);
 
-        // 7. Kirim semua data yang diperlukan ke view
+        // 7. List semua file gambar di S3 folder 'products'
+        try {
+            $s3Files = Storage::disk('s3')->files('products');
+        } catch (\Exception $e) {
+            \Log::error('Error accessing S3 files: ' . $e->getMessage());
+            $s3Files = [];
+        }
+
+        // 8. Kirim semua data yang diperlukan ke view
         return view('products.index', [
             'products' => $products,
             'categories' => $categories,
-            'selectedCategory' => $categorySlug, // Untuk menandai kategori aktif
-            'searchQuery' => $searchQuery, // Untuk menampilkan kembali di input search
+            'selectedCategory' => $categorySlug,
+            'searchQuery' => $searchQuery,
+            's3Files' => $s3Files,
         ]);
     }
-
     // Method 'show' dan lainnya tetap sama...
     public function show(Product $product)
     {
@@ -73,10 +82,18 @@ class ProductController extends Controller
                 ->get();
         }
 
+        try {
+            $s3Files = Storage::disk('s3')->files('products');
+        } catch (\Exception $e) {
+            \Log::error('Error accessing S3 files: ' . $e->getMessage());
+            $s3Files = [];
+        }
+
         // Kirim data produk dan produk terkait ke view
         return view('products.show', [
             'product' => $product,
-            'relatedProducts' => $relatedProducts
+            'relatedProducts' => $relatedProducts,
+            's3Files' => $s3Files,
         ]);
     }
 }
